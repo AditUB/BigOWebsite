@@ -1,11 +1,15 @@
 import { Container, Row, Col, Tab, Nav } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
 import { EventCard } from "./EventCard";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
-//past
+import { AuthContext } from "../context/AuthContext";
+import { db } from "../firebase";
+import { collection, onSnapshot } from "firebase/firestore";
+
+//past - to be deleted
 import eveImg1 from "../assets/imgs/events/past/1.jpg";
 import eveImg2 from "../assets/imgs/events/past/2.jpg";
 import eveImg3 from "../assets/imgs/events/past/3.jpg";
@@ -21,136 +25,144 @@ import eveImg12 from "../assets/imgs/events/past/12.jpeg";
 import eveImg13 from "../assets/imgs/events/past/13.jpg";
 import eveImg14 from "../assets/imgs/events/past/14.jpeg";
 import eveImg15 from "../assets/imgs/events/past/15.jpeg";
-
+//
 //live
 import emptyImg from "../assets/imgs/events/live/empty.png";
-
-//upcoming
-
 import colorSharp2 from "../assets/img/color-sharp2.png";
 import "animate.css";
 import TrackVisibility from "react-on-screen";
 
 export const Events = () => {
-  const eventslive = [
+  const [events, setEvents] = useState([]);
+  const [isLogged, setIsLogged] = useState(false);
+  const { currentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    setIsLogged(currentUser ? true : false);
+  }, [currentUser]);
+
+  const emptyEvent = [
     {
-      title: "Nope nothing here for now",
-      description: "Touch grass, watch a movie...maybe finally..",
-      imgUrl: emptyImg,
+      eventName: "Nope nothing here for now",
+      startDate: "Touch grass, watch a movie... maybe finally..",
+      img: emptyImg,
     },
     {
-      title: "Nope nothing here for now",
-      description: "Touch grass, watch a movie...maybe finally..",
-      imgUrl: emptyImg,
+      eventName: "Nope nothing here for now",
+      startDate: "Touch grass, watch a movie... maybe finally..",
+      img: emptyImg,
     },
     {
-      title: "Nope nothing here for now",
-      description: "Touch grass, watch a movie...maybe finally..",
-      imgUrl: emptyImg,
-    },
-  ];
-  const eventsupcoming = [
-    {
-      title: "Nope nothing here for now",
-      description: "Touch grass, watch a movie...maybe finally..",
-      imgUrl: emptyImg,
-    },
-    {
-      title: "Nope nothing here for now",
-      description: "Touch grass, watch a movie...maybe finally..",
-      imgUrl: emptyImg,
-    },
-    {
-      title: "Nope nothing here for now",
-      description: "Touch grass, watch a movie...maybe finally..",
-      imgUrl: emptyImg,
+      eventName: "Nope nothing here for now",
+      startDate: "Touch grass, watch a movie... maybe finally..",
+      img: emptyImg,
     },
   ];
-  const eventspast = [
-    {
-      title: "Typing Contest",
-      description: "21st May, 2023",
-      imgUrl: eveImg14,
-    },
-    {
-      title: "Strategic Plans for Placement & Internships Talk",
-      description: "27th December, 2022",
-      imgUrl: eveImg13,
-    },
-    {
-      title: "Great Coding Challenge 3.0",
-      description: "9th December, 2022",
-      link: "https://www.hackerrank.com/great-coding-challenge-3-0",
-      imgUrl: eveImg12,
-    },
-    {
-      title: "Session on Git and GitHub",
-      description: "24th November, 2022",
-      imgUrl: eveImg11,
-    },
-    {
-      title: "Session on Competitive Programming",
-      description: "9th November,2022",
-      imgUrl: eveImg10,
-    },
-    {
-      title: "Algowin 1.0",
-      description: "5th November,2022",
-      link: "https://www.hackerrank.com/algowin-1-0",
-      imgUrl: eveImg9,
-    },
-    {
-      title: "Recruiting",
-      description: "11th July,2022",
-      link: "https://www.hackerrank.com/gcc2",
-      imgUrl: eveImg8,
-    },
-    {
-      title: "Team Programming Contest 3.0",
-      description: "10th June,2022",
-      link: "https://www.hackerrank.com/team-programming-contest-3-0",
-      imgUrl: eveImg7,
-    },
-    {
-      title: "Code Wiser",
-      description: "5th April,2022",
-      link: "https://www.hackerrank.com/code-wiser",
-      imgUrl: eveImg6,
-    },
-    {
-      title: "Recruiting-non-tech",
-      description: "5th November,2022",
-      imgUrl: eveImg5,
-    },
-    {
-      title: "Team Programming Contest 2.0",
-      description: "16th December,2021",
-      link: "https://www.hackerrank.com/tpc-2-0-sem-3",
-      imgUrl: eveImg4,
-    },
-    {
-      title: "Team Programming Contest 1.0",
-      description: "30th October,2021",
-      link: "https://www.hackerrank.com/team-programming-contest-1-0",
-      imgUrl: eveImg15,
-    },
-    {
-      title: "Great Coding Challenge",
-      description: "1st September,2021",
-      link: "http://www.hackerrank.com/great-coding-challenge-gcc",
-      imgUrl: eveImg3,
-    },
-    {
-      title: "Competitive Programming 101",
-      description: "24th August,2021",
-      imgUrl: eveImg2,
-    },
-    {
-      title: "Github101",
-      description: "23rd August,2021",
-      imgUrl: eveImg1,
-    },
-  ];
+  //To be deleted
+  // const eventspast = [
+  //   {
+  //     title: "Typing Contest",
+  //     description: "21st May, 2023",
+  //     imgUrl: eveImg14,
+  //   },
+  //   {
+  //     title: "Strategic Plans for Placement & Internships Talk",
+  //     description: "27th December, 2022",
+  //     imgUrl: eveImg13,
+  //   },
+  //   {
+  //     title: "Great Coding Challenge 3.0",
+  //     description: "9th December, 2022",
+  //     link: "https://www.hackerrank.com/great-coding-challenge-3-0",
+  //     imgUrl: eveImg12,
+  //   },
+  //   {
+  //     title: "Session on Git and GitHub",
+  //     description: "24th November, 2022",
+  //     imgUrl: eveImg11,
+  //   },
+  //   {
+  //     title: "Session on Competitive Programming",
+  //     description: "9th November,2022",
+  //     imgUrl: eveImg10,
+  //   },
+  //   {
+  //     title: "Algowin 1.0",
+  //     description: "5th November,2022",
+  //     link: "https://www.hackerrank.com/algowin-1-0",
+  //     imgUrl: eveImg9,
+  //   },
+  //   {
+  //     title: "Recruiting",
+  //     description: "11th July,2022",
+  //     link: "https://www.hackerrank.com/gcc2",
+  //     imgUrl: eveImg8,
+  //   },
+  //   {
+  //     title: "Team Programming Contest 3.0",
+  //     description: "10th June,2022",
+  //     link: "https://www.hackerrank.com/team-programming-contest-3-0",
+  //     imgUrl: eveImg7,
+  //   },
+  //   {
+  //     title: "Code Wiser",
+  //     description: "5th April,2022",
+  //     link: "https://www.hackerrank.com/code-wiser",
+  //     imgUrl: eveImg6,
+  //   },
+  //   {
+  //     title: "Recruiting-non-tech",
+  //     description: "5th November,2022",
+  //     imgUrl: eveImg5,
+  //   },
+  //   {
+  //     title: "Team Programming Contest 2.0",
+  //     description: "16th December,2021",
+  //     link: "https://www.hackerrank.com/tpc-2-0-sem-3",
+  //     imgUrl: eveImg4,
+  //   },
+  //   {
+  //     title: "Team Programming Contest 1.0",
+  //     description: "30th October,2021",
+  //     link: "https://www.hackerrank.com/team-programming-contest-1-0",
+  //     imgUrl: eveImg15,
+  //   },
+  //   {
+  //     title: "Great Coding Challenge",
+  //     description: "1st September,2021",
+  //     link: "http://www.hackerrank.com/great-coding-challenge-gcc",
+  //     imgUrl: eveImg3,
+  //   },
+  //   {
+  //     title: "Competitive Programming 101",
+  //     description: "24th August,2021",
+  //     imgUrl: eveImg2,
+  //   },
+  //   {
+  //     title: "Github101",
+  //     description: "23rd August,2021",
+  //     imgUrl: eveImg1,
+  //   },
+  // ];
+  //
+  useEffect(() => {
+    const unsub = onSnapshot(
+      collection(db, "events"),
+      (snapshot) => {
+        let list = [];
+        snapshot.docs.forEach((doc) => {
+          list.push({ id: doc.id, ...doc.data() });
+        });
+        setEvents(list);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    return () => {
+      unsub();
+    };
+  }, []);
 
   const responsive = {
     superLargeDesktop: {
@@ -171,11 +183,26 @@ export const Events = () => {
       items: 1,
     },
   };
-  const [activeTab, setActiveTab] = useState("first");
 
+  const [activeTab, setActiveTab] = useState("first");
   const handleTabSelect = (tabKey) => {
     setActiveTab(tabKey);
   };
+
+  //filter events
+  //live
+  const today = new Date();
+  const eventslive = events.filter((event) => {
+    const [yearStart, monthStart, dayStart] = event.startDate.split("-");
+    const [yearEnd, monthEnd, dayEnd] = event.endDate.split("-");
+    const startDate = new Date(yearStart, monthStart - 1, dayStart);
+    const endDate = new Date(yearEnd, monthEnd - 1, dayEnd);
+    return startDate <= today && endDate >= today;
+  });
+  //upcoming, past
+  const today1 = new Date().toISOString().split("T")[0];
+  const eventsupcoming = events.filter((event) => event.startDate > today1);
+  const eventspast = events.filter((event) => event.endDate < today1);
 
   return (
     <section className="events" id="events">
@@ -242,9 +269,18 @@ export const Events = () => {
                             infinite={true}
                             className="owl-carousel owl-theme event-slider"
                           >
-                            {eventslive.map((events, index) => {
-                              return <EventCard key={index} {...events} />;
-                            })}
+                            {eventslive.length === 0
+                              ? emptyEvent.map((event, index) => (
+                                  <EventCard key={index} {...event} />
+                                ))
+                              : eventslive.map((event, index) => (
+                                  <EventCard
+                                    key={index}
+                                    {...event}
+                                    isLogged={isLogged}
+                                    id={event.id}
+                                  />
+                                ))}
                           </Carousel>
                         )}
                       </Tab.Pane>
@@ -255,9 +291,18 @@ export const Events = () => {
                             infinite={true}
                             className="owl-carousel owl-theme event-slider"
                           >
-                            {eventsupcoming.map((events, index) => {
-                              return <EventCard key={index} {...events} />;
-                            })}
+                            {eventsupcoming.length === 0
+                              ? emptyEvent.map((event, index) => (
+                                  <EventCard key={index} {...event} />
+                                ))
+                              : eventsupcoming.map((event, index) => (
+                                  <EventCard
+                                    key={index}
+                                    {...event}
+                                    isLogged={isLogged}
+                                    id={event.id}
+                                  />
+                                ))}
                           </Carousel>
                         )}
                       </Tab.Pane>
@@ -269,7 +314,13 @@ export const Events = () => {
                             className="owl-carousel owl-theme event-slider"
                           >
                             {eventspast.map((events, index) => {
-                              return <EventCard key={index} {...events} />;
+                              return (
+                                <EventCard
+                                  key={index.id}
+                                  {...events}
+                                  isLogged={isLogged}
+                                />
+                              );
                             })}
                           </Carousel>
                         )}
@@ -282,7 +333,7 @@ export const Events = () => {
           </Col>
         </Row>
       </Container>
-      <p style={{ color: "black" }}>AUB&SAM</p>
+      <p style={{ color: "black" }}>AUB&SAM&ChatGPT by OpenAI</p>
       <img className="background-image-right" src={colorSharp2}></img>
     </section>
   );

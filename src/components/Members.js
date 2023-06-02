@@ -22,6 +22,7 @@ import mem2025Img4 from "../assets/imgs/members/current/2025/4.png";
 import mem2025Img5 from "../assets/imgs/members/current/2025/5.png";
 import mem2025Img6 from "../assets/imgs/members/current/2025/6.png";
 import mem2025Img7 from "../assets/imgs/members/current/2025/7.png";
+import mem2025Img8 from "../assets/imgs/members/current/2025/8.png";
 // past
 import mem2022Img1 from "../assets/imgs/members/past/2022/1.jpeg";
 import mem2022Img2 from "../assets/imgs/members/past/2022/2.jpeg";
@@ -126,6 +127,11 @@ export const Members = () => {
       title: "Vaishnavi T P",
       description: "Non-Tech",
       imgUrl: mem2025Img7,
+    },
+    {
+      title: "Aryan ",
+      description: "Poster Designer",
+      imgUrl: mem2025Img8,
     },
   ];
   const members2023 = [
